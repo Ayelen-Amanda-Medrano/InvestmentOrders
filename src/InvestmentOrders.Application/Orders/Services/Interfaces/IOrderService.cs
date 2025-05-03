@@ -6,8 +6,8 @@ namespace InvestmentOrders.Application.Orders.Services.Interfaces;
 
 public interface IOrderService
 {
-    Task<Result<OrderDto>> GetOrderByIdAsync(int id);
+    Task<Result<OrderDto>> GetOrderByIdAsync(int orderId);
     Task<Result<CreateOrderResponse>> CreateOrderAsync(CreteOrderRequest request);
-    Task<Result<OrderDto>> UpdateOrderAsync(UpdateOrderRequest request);
-    Task<Result<bool>> DeleteOrderAsync(int id);
+    Task<Result<OrderDto>> UpdateOrderAsync(int orderId, UpdateOrderRequest request);
+    Task<Result<object>> DeleteOrderAsync(int orderId);
 }

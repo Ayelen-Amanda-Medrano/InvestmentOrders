@@ -18,14 +18,14 @@ public class OrdersController : ControllerBase
         _orderService = orderService;
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{orderId}")]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result<OrderDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetOrderByIdAsync([FromQuery] int id)
+    public async Task<IActionResult> GetOrderByIdAsync([FromRoute] int orderId)
     {
-        var result = await _orderService.GetOrderByIdAsync(id);
+        var result = await _orderService.GetOrderByIdAsync(orderId);
 
         return StatusCode((int)result.StatusCode, result);
     }
@@ -43,25 +43,25 @@ public class OrdersController : ControllerBase
         return StatusCode((int)result.StatusCode, result);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{orderId}")]
     [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result<OrderDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateOrderAsync([FromQuery] int id, [FromBody] UpdateOrderRequest request)
+    public async Task<IActionResult> UpdateOrderAsync([FromRoute] int orderId, [FromBody] UpdateOrderRequest request)
     {
-        var result = await _orderService.UpdateOrderAsync(request);
+        var result = await _orderService.UpdateOrderAsync(orderId, request);
 
         return StatusCode((int)result.StatusCode, result);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{orderId}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteOrderAsync([FromQuery] int id)
+    public async Task<IActionResult> DeleteOrderAsync([FromRoute] int orderId)
     {
-        var result = await _orderService.DeleteOrderAsync(id);
+        var result = await _orderService.DeleteOrderAsync(orderId);
 
         if (result.Success)
             return NoContent();

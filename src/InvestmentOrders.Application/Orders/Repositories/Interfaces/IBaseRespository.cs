@@ -6,8 +6,6 @@ public interface IBaseRepository<TEntity, TEntityId>
 {
     Task<TEntity?> GetByIdAsync(TEntityId id);
 
-    Task<IReadOnlyList<TEntity>> GetAllAsync();
-
     Task AddAsync(TEntity entity);
 
     Task SaveChangesAsync();

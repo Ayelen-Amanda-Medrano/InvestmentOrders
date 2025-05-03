@@ -34,14 +34,14 @@ public class OrdenConfiguration : IEntityTypeConfiguration<Orden>
 
         builder.Property(o => o.MontoTotal);
 
-        builder
-            .HasOne(o => o.Estado)
-            .WithMany()
-            .HasForeignKey(o => o.EstadoId);
+        //builder
+        //    .HasOne(o => o.Estado)
+        //    .WithMany()
+        //    .HasForeignKey(o => o.EstadoId);
 
-        builder
-            .HasOne(o => o.Activo)
-            .WithMany()
-            .HasPrincipalKey(a => a.Nombre);
+        //builder
+        //    .HasOne(o => o.Activo)
+        //    .WithMany()
+        //    .HasPrincipalKey(a => a.Nombre);
     }
 }

@@ -9,8 +9,9 @@ public class Orden
     public decimal Precio { get; set; }
     public char Operacion { get; set; }
     public int EstadoId { get; set; }
-    public decimal? MontoTotal { get; set; }
+    public decimal? MontoTotal { get; set; } = 122m;
 
-    public EstadoOrden Estado { get; set; } = EstadoOrden.InProcess;
-    public Activo Activo { get; set; }
+    //public EstadoOrden Estado { get; set; }
+
+    //public Activo Activo { get; set; }
 }

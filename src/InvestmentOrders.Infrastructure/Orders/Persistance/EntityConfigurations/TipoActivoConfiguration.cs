@@ -8,8 +8,19 @@ public class TipoActivoConfiguration : IEntityTypeConfiguration<TipoActivo>
 {
     public void Configure(EntityTypeBuilder<TipoActivo> builder)
     {
-        builder.HasKey(provider => provider.Id);
+        builder.ToTable("TiposActivo");
+
+        builder.HasKey(e => e.Id);
+
+        builder.Property(e => e.Id)
+               .ValueGeneratedNever();
 
         builder.Property(provider => provider.Descripcion).IsRequired();
+
+        builder.HasData(
+            new TipoActivo(1, "Acción"),
+            new TipoActivo(2, "Bono"),
+            new TipoActivo(3, "FCI")
+        );
     }
 }

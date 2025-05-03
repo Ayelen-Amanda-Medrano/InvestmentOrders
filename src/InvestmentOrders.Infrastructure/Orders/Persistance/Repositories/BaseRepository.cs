@@ -15,8 +15,6 @@ public class BaseRepository<TEntity, TEntityId> : IBaseRepository<TEntity, TEnti
     public virtual async Task<TEntity?> GetByIdAsync(TEntityId id)
         => await DbContext.Set<TEntity>().FindAsync(id);
 
-    public virtual async Task<IReadOnlyList<TEntity>> GetAllAsync()
-        => await DbContext.Set<TEntity>().ToListAsync();
 
     public virtual async Task AddAsync(TEntity entity)
         => await DbContext.Set<TEntity>().AddAsync(entity);

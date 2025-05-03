@@ -1,5 +1,9 @@
-﻿namespace InvestmentOrders.Application.Orders.Repositories.Interfaces;
+﻿using InvestmentOrders.Domain.Entities;
+using InvestmentOrders.Domain.Enums;
 
-public interface IOrderRepository
+namespace InvestmentOrders.Application.Orders.Repositories.Interfaces;
+
+public interface IOrderRepository : IBaseRepository<Orden, int>
 {
+    Orden UpdateOrderStatus(int orderId, Estado status);
 }
