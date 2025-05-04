@@ -12,20 +12,32 @@ namespace InvestmentOrders.Application.Orders.Services;
 public class OrderService : IOrderService
 {
     private readonly IOrderRepository _orderRepository;
+    private readonly IAssetRepository _assetRepository;
     private readonly IMapper _mapper;
-    public OrderService(IOrderRepository orderRepository, IMapper mapper)
+    public OrderService(IOrderRepository orderRepository, IAssetRepository assetRepository, IMapper mapper)
     {
         _orderRepository = orderRepository;
+        _assetRepository = assetRepository;
         _mapper = mapper;
     }
 
     public async Task<Result<CreateOrderResponse>> CreateOrderAsync(CreteOrderRequest request)
     {
-        var order = _mapper.Map<Orden>(request);
+        var asset = await _assetRepository.GetAssetByNameAsync(request.NombreActivo);
+        if (asset == null)
+            return Result<CreateOrderResponse>.Fail($"The asset '{request.NombreActivo}' does not exist.", HttpStatusCode.BadRequest);
 
-        await _orderRepository.AddAsync(order);
+        var newOrder = Orden.CreateOrder(request.CuentaId, request.NombreActivo, request.Cantidad, request.Operacion);
 
-        return Result<CreateOrderResponse>.Ok(new CreateOrderResponse() { OrderId = order.Id }, HttpStatusCode.OK);
+        newOrder.SetAsset(asset);
+        newOrder.SetPrice(request.PrecioUnitario);
+
+        newOrder.CalculateTotalAmount();
+
+        await _orderRepository.AddAsync(newOrder);
+        await _orderRepository.SaveChangesAsync();
+
+        return Result<CreateOrderResponse>.Ok(new CreateOrderResponse { OrderId = newOrder.Id }, HttpStatusCode.OK);
     }
 
     public async Task<Result<OrderDto>> GetOrderByIdAsync(int orderId)
@@ -36,7 +48,7 @@ public class OrderService : IOrderService
 
         var orderDto = _mapper.Map<OrderDto>(order);
 
-        return Result<OrderDto>.Ok(orderDto, HttpStatusCode.Created);
+        return Result<OrderDto>.Ok(orderDto, HttpStatusCode.OK);
     }
 
     public async Task<Result<OrderDto>> UpdateOrderAsync(int orderId, UpdateOrderRequest request)
@@ -45,8 +57,8 @@ public class OrderService : IOrderService
         if (order is null)
             return Result<OrderDto>.Fail($"Order with ID '{orderId}' was not found.", HttpStatusCode.NotFound);
 
-        //order.EstadoId = request.Status;
-        await _orderRepository.UpdateAsync(order);
+        order.UpdateStatus((int)request.Estado);
+        await _orderRepository.SaveChangesAsync();
 
         var orderDto = _mapper.Map<OrderDto>(order);
 
@@ -63,4 +75,5 @@ public class OrderService : IOrderService
 
         return Result<object>.Ok(null, HttpStatusCode.NoContent);
     }
+    
 }

@@ -49,7 +49,7 @@ public class OrdersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result<OrderDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateOrderAsync([FromRoute] int orderId, [FromBody] UpdateOrderRequest request)
+    public async Task<IActionResult> UpdateOrderAsync([FromRoute] int orderId, [FromQuery] UpdateOrderRequest request)
     {
         var result = await _orderService.UpdateOrderAsync(orderId, request);
 

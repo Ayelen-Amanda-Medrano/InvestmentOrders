@@ -12,11 +12,13 @@ public class OrdenConfiguration : IEntityTypeConfiguration<Orden>
 
         builder.HasKey(o => o.Id);
 
+        builder.Property(o => o.Id)
+            .ValueGeneratedOnAdd();
+
         builder.Property(o => o.CuentaId)
             .IsRequired();
 
         builder.Property(o => o.NombreActivo)
-            .HasMaxLength(32)
             .IsRequired();
 
         builder.Property(o => o.Cantidad)
@@ -34,14 +36,16 @@ public class OrdenConfiguration : IEntityTypeConfiguration<Orden>
 
         builder.Property(o => o.MontoTotal);
 
-        //builder
-        //    .HasOne(o => o.Estado)
-        //    .WithMany()
-        //    .HasForeignKey(o => o.EstadoId);
+        builder.HasOne(o => o.Activo)
+            .WithMany()
+            .HasForeignKey(o => o.NombreActivo)
+            .HasPrincipalKey(a => a.Nombre)
+            .OnDelete(DeleteBehavior.Restrict);
 
-        //builder
-        //    .HasOne(o => o.Activo)
-        //    .WithMany()
-        //    .HasPrincipalKey(a => a.Nombre);
+        builder.HasOne(o => o.Estado)
+            .WithMany()
+            .HasForeignKey(o => o.EstadoId)
+            .OnDelete(DeleteBehavior.Restrict);
+
     }
 }

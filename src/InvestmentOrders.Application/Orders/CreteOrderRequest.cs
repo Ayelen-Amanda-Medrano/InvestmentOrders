@@ -13,8 +13,7 @@ public class CreteOrderRequest
     [Required]
     public int Cantidad { get; set; }
 
-    [Required]
-    public decimal Precio { get; set; }
+    public decimal? PrecioUnitario { get; set; }
 
     [Required]
     public char Operacion { get; set; }

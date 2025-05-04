@@ -18,6 +18,7 @@ public static class InfrastructureServiceRegistration
             options.UseSqlite(connectionString));
 
         services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IAssetRepository, AssetRepository>();
         services.AddScoped<IBaseRepository<Orden, int>, BaseRepository<Orden, int>>();
 
         return services;

@@ -7,9 +7,8 @@ public class OrderDbContextFactory : IDesignTimeDbContextFactory<OrderDbContext>
 {
     public OrderDbContext CreateDbContext(string[] args)
     {
-        var connectionString = args[0];
         var optionsBuilder = new DbContextOptionsBuilder<OrderDbContext>();
-        optionsBuilder.UseSqlite(connectionString);
+        optionsBuilder.UseSqlite("Data Source=OrdenesBd.db");
 
         return new OrderDbContext(optionsBuilder.Options);
     }

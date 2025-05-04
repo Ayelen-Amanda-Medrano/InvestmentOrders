@@ -42,6 +42,80 @@ namespace InvestmentOrders.Infrastructure.Migrations
                     b.HasIndex("TipoActivoId");
 
                     b.ToTable("Activos", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Nombre = "Apple",
+                            PrecioUnitario = 177.97m,
+                            Ticker = "AAPL",
+                            TipoActivoId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Nombre = "Alphabet Inc",
+                            PrecioUnitario = 138.21m,
+                            Ticker = "GOOGL",
+                            TipoActivoId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Nombre = "Microsoft",
+                            PrecioUnitario = 329.04m,
+                            Ticker = "MSFT",
+                            TipoActivoId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Nombre = "Coca Cola",
+                            PrecioUnitario = 58.3m,
+                            Ticker = "KO",
+                            TipoActivoId = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Nombre = "Walmart",
+                            PrecioUnitario = 163.42m,
+                            Ticker = "WMT",
+                            TipoActivoId = 1
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Nombre = "BONOS ARGENTINA USD 2030 L.A",
+                            PrecioUnitario = 307.4m,
+                            Ticker = "AL30",
+                            TipoActivoId = 2
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Nombre = "Bonos Globales Argentina USD Step Up 2030",
+                            PrecioUnitario = 336.1m,
+                            Ticker = "GD30",
+                            TipoActivoId = 2
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Nombre = "Delta Pesos Clase A",
+                            PrecioUnitario = 0.0181m,
+                            Ticker = "Delta.Pesos",
+                            TipoActivoId = 3
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Nombre = "Fima Premium Clase A",
+                            PrecioUnitario = 0.0317m,
+                            Ticker = "Fima.Premium",
+                            TipoActivoId = 3
+                        });
                 });
 
             modelBuilder.Entity("InvestmentOrders.Domain.Entities.EstadoOrden", b =>
@@ -95,7 +169,6 @@ namespace InvestmentOrders.Infrastructure.Migrations
 
                     b.Property<string>("NombreActivo")
                         .IsRequired()
-                        .HasMaxLength(32)
                         .HasColumnType("TEXT");
 
                     b.Property<char>("Operacion")
@@ -106,6 +179,10 @@ namespace InvestmentOrders.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EstadoId");
+
+                    b.HasIndex("NombreActivo");
 
                     b.ToTable("Ordenes", (string)null);
                 });
@@ -146,10 +223,30 @@ namespace InvestmentOrders.Infrastructure.Migrations
                     b.HasOne("InvestmentOrders.Domain.Entities.TipoActivo", "TipoActivo")
                         .WithMany()
                         .HasForeignKey("TipoActivoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("TipoActivo");
+                });
+
+            modelBuilder.Entity("InvestmentOrders.Domain.Entities.Orden", b =>
+                {
+                    b.HasOne("InvestmentOrders.Domain.Entities.EstadoOrden", "Estado")
+                        .WithMany()
+                        .HasForeignKey("EstadoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("InvestmentOrders.Domain.Entities.Activo", "Activo")
+                        .WithMany()
+                        .HasForeignKey("NombreActivo")
+                        .HasPrincipalKey("Nombre")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Activo");
+
+                    b.Navigation("Estado");
                 });
 #pragma warning restore 612, 618
         }

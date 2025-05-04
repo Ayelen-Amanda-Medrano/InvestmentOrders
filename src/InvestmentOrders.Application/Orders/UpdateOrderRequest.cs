@@ -1,8 +1,8 @@
-﻿using InvestmentOrders.Domain.Enums;
+﻿using InvestmentOrders.Application.Orders.Enums;
 
 namespace InvestmentOrders.Application.Orders;
 
 public class UpdateOrderRequest
 {
-    public Estado Status { get; set; }
+    public EstadoOrdenEnum Estado { get; set; }
 }
