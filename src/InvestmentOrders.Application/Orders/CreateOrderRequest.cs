@@ -3,7 +3,7 @@
 /// <summary>
 /// Representa la solicitud para crear una nueva orden de inversión.
 /// </summary>
-public class CreteOrderRequest
+public class CreateOrderRequest
 {
     /// <summary>
     /// Identificador de la cuenta asociada a la orden.

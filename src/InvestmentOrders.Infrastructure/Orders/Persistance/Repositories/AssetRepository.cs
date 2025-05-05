@@ -11,6 +11,8 @@ public class AssetRepository : BaseRepository<Activo, int>, IAssetRepository
 
     public async Task<Activo?> GetAssetByNameAsync(string name)
     {
-        return await DbContext.Activos.SingleOrDefaultAsync(asset => asset.Nombre == name);
+        return await DbContext.Activos
+            .Include(a => a.TipoActivo)
+            .FirstOrDefaultAsync(a => a.Nombre == name);
     }
 }

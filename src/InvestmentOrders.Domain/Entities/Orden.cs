@@ -11,8 +11,8 @@ public class Orden
     public int EstadoId { get; private set; }
     public decimal? MontoTotal { get; private set; }
 
-    public Activo Activo { get; set; }
-    public EstadoOrden Estado { get; set; }
+    public Activo Activo { get; set; } = null!;
+    public EstadoOrden Estado { get; set; } = null!;
 
     public static Orden CreateOrder(int cuentaId, string nombreActivo, int cantidad, char operacion)
     {

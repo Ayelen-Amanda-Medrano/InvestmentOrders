@@ -1,6 +1,9 @@
 ﻿using System.Reflection;
 using System.Text.Json.Serialization;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using InvestmentOrders.Application;
+using InvestmentOrders.Application.Orders;
 using InvestmentOrders.Infrastructure;
 
 namespace InvestmentOrders.API;
@@ -19,6 +22,9 @@ public static class StartupExtensions
             .AddControllers()
             .AddJsonOptions(options =>
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+        builder.Services.AddFluentValidationAutoValidation();
+        builder.Services.AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(CreteOrderRequestValidator)));
 
         builder.Services.AddSwaggerGen(options =>
         {

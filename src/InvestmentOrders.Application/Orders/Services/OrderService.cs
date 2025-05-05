@@ -10,7 +10,7 @@ using System.Net;
 namespace InvestmentOrders.Application.Orders.Services;
 
 /// <summary>
-/// Servicio para gestionar las órdenes de inversión.
+/// Service for managing investment orders.
 /// </summary>
 public class OrderService : IOrderService
 {
@@ -19,11 +19,11 @@ public class OrderService : IOrderService
     private readonly IMapper _mapper;
 
     /// <summary>
-    /// Constructor del servicio de órdenes.
+    /// Initializes a new instance of the <see cref="OrderService"/> class.
     /// </summary>
-    /// <param name="orderRepository">Repositorio de órdenes.</param>
-    /// <param name="assetRepository">Repositorio de activos.</param>
-    /// <param name="mapper">Mapper para transformar entidades en DTOs.</param>
+    /// <param name="orderRepository">Repository for managing orders.</param>
+    /// <param name="assetRepository">Repository for managing financial assets.</param>
+    /// <param name="mapper">Mapper for transforming entities into DTOs.</param>
     public OrderService(IOrderRepository orderRepository, IAssetRepository assetRepository, IMapper mapper)
     {
         _orderRepository = orderRepository;
@@ -32,15 +32,19 @@ public class OrderService : IOrderService
     }
 
     /// <summary>
-    /// Crea una nueva orden de inversión.
+    /// Creates a new investment order.
     /// </summary>
-    /// <param name="request">Datos de la orden a crear.</param>
-    /// <returns>El resultado con el identificador de la orden creada.</returns>
-    public async Task<Result<CreateOrderResponse>> CreateOrderAsync(CreteOrderRequest request)
+    /// <param name="request">The details of the order to create.</param>
+    /// <returns>A result containing the ID of the created order.</returns>
+    public async Task<Result<CreateOrderResponse>> CreateOrderAsync(CreateOrderRequest request)
     {
         var asset = await _assetRepository.GetAssetByNameAsync(request.NombreActivo);
         if (asset == null)
             return Result<CreateOrderResponse>.Fail($"El activo '{request.NombreActivo}' no existe.", HttpStatusCode.BadRequest);
+
+        if (asset.NeedsUnitPrice() && (request.PrecioUnitario is null || request.PrecioUnitario <= 0))
+            return Result<CreateOrderResponse>
+                .Fail($"El precio unitario es obligatorio y debe ser mayor a 0 para el activo de tipo '{asset.TipoActivo.Descripcion}'.", HttpStatusCode.BadRequest);
 
         var newOrder = Orden.CreateOrder(request.CuentaId, request.NombreActivo, request.Cantidad, request.Operacion);
 
@@ -56,13 +60,13 @@ public class OrderService : IOrderService
     }
 
     /// <summary>
-    /// Obtiene una orden por su identificador.
+    /// Retrieves an order by its identifier.
     /// </summary>
-    /// <param name="orderId">Identificador de la orden.</param>
-    /// <returns>El resultado con los datos de la orden.</returns>
+    /// <param name="orderId">The unique identifier of the order.</param>
+    /// <returns>A result containing the details of the order.</returns>
     public async Task<Result<OrderDto>> GetOrderByIdAsync(int orderId)
     {
-        var order = await _orderRepository.GetByIdAsync(orderId);
+        var order = await _orderRepository.GetOrderByIdAsync(orderId);
         if (order is null)
             return Result<OrderDto>.Fail($"La orden con ID '{orderId}' no fue encontrada.", HttpStatusCode.NotFound);
 
@@ -72,14 +76,14 @@ public class OrderService : IOrderService
     }
 
     /// <summary>
-    /// Actualiza el estado de una orden existente.
+    /// Updates the status of an existing order.
     /// </summary>
-    /// <param name="orderId">Identificador de la orden a actualizar.</param>
-    /// <param name="request">Datos para actualizar la orden.</param>
-    /// <returns>El resultado con los datos de la orden actualizada.</returns>
+    /// <param name="orderId">The unique identifier of the order to update.</param>
+    /// <param name="request">The details of the update request.</param>
+    /// <returns>A result containing the updated order details.</returns>
     public async Task<Result<OrderDto>> UpdateOrderAsync(int orderId, UpdateOrderRequest request)
     {
-        var order = await _orderRepository.GetByIdAsync(orderId);
+        var order = await _orderRepository.GetOrderByIdAsync(orderId);
         if (order is null)
             return Result<OrderDto>.Fail($"La orden con ID '{orderId}' no fue encontrada.", HttpStatusCode.NotFound);
 
@@ -92,13 +96,13 @@ public class OrderService : IOrderService
     }
 
     /// <summary>
-    /// Elimina una orden existente.
+    /// Deletes an existing order.
     /// </summary>
-    /// <param name="orderId">Identificador de la orden a eliminar.</param>
-    /// <returns>Un resultado indicando si la eliminación fue exitosa.</returns>
+    /// <param name="orderId">The unique identifier of the order to delete.</param>
+    /// <returns>A result indicating whether the deletion was successful.</returns>
     public async Task<Result<object>> DeleteOrderAsync(int orderId)
     {
-        var order = await _orderRepository.GetByIdAsync(orderId);
+        var order = await _orderRepository.GetOrderByIdAsync(orderId);
         if (order is null)
             return Result<object>.Fail($"La orden con ID '{orderId}' no fue encontrada.", HttpStatusCode.NotFound);
 

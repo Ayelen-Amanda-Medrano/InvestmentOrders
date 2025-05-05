@@ -1,5 +1,4 @@
 ﻿using InvestmentOrders.Application.Common;
-using InvestmentOrders.Application.Orders;
 using InvestmentOrders.Application.Orders.Dtos;
 using InvestmentOrders.Application.Orders.Response;
 using InvestmentOrders.Application.Orders.Services.Interfaces;
@@ -53,7 +52,7 @@ public class OrdersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Result<CreateOrderResponse>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> CreateOrderAsync([FromBody] CreteOrderRequest request)
+    public async Task<IActionResult> CreateOrderAsync([FromBody] CreateOrderRequest request)
     {
         var result = await _orderService.CreateOrderAsync(request);
 
