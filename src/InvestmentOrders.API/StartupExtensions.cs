@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Reflection;
+using System.Text.Json.Serialization;
 using InvestmentOrders.Application;
 using InvestmentOrders.Infrastructure;
 
@@ -19,7 +20,16 @@ public static class StartupExtensions
             .AddJsonOptions(options =>
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(options =>
+        {
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            options.IncludeXmlComments(xmlPath);
+
+            var applicationXmlFile = "InvestmentOrders.Application.xml";
+            var applicationXmlPath = Path.Combine(AppContext.BaseDirectory, applicationXmlFile);
+            options.IncludeXmlComments(applicationXmlPath);
+        });
 
         return builder;
     }

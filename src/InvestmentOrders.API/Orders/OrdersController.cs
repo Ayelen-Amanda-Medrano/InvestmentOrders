@@ -7,17 +7,29 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InvestmentOrders.API.Order;
 
+/// <summary>
+/// Controlador para gestionar las órdenes de inversión.
+/// </summary>
 [ApiController]
 [Route("/api/order")]
 public class OrdersController : ControllerBase
 {
     private readonly IOrderService _orderService;
 
+    /// <summary>
+    /// Constructor del controlador de órdenes.
+    /// </summary>
+    /// <param name="orderService">Servicio para gestionar las órdenes.</param>
     public OrdersController(IOrderService orderService)
     {
         _orderService = orderService;
     }
 
+    /// <summary>
+    /// Obtiene una orden por su identificador.
+    /// </summary>
+    /// <param name="orderId">Identificador de la orden.</param>
+    /// <returns>La orden solicitada.</returns>
     [HttpGet("{orderId}")]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Result<OrderDto>))]
@@ -30,6 +42,11 @@ public class OrdersController : ControllerBase
         return StatusCode((int)result.StatusCode, result);
     }
 
+    /// <summary>
+    /// Crea una nueva orden.
+    /// </summary>
+    /// <param name="request">Datos de la orden a crear.</param>
+    /// <returns>La respuesta con el identificador de la orden creada.</returns>
     [HttpPost]
     [Consumes("application/json")]
     [Produces("application/json")]
@@ -43,6 +60,12 @@ public class OrdersController : ControllerBase
         return StatusCode((int)result.StatusCode, result);
     }
 
+    /// <summary>
+    /// Actualiza una orden existente.
+    /// </summary>
+    /// <param name="orderId">Identificador de la orden a actualizar.</param>
+    /// <param name="request">Datos para actualizar la orden.</param>
+    /// <returns>La orden actualizada.</returns>
     [HttpPut("{orderId}")]
     [Consumes("application/json")]
     [Produces("application/json")]
@@ -56,6 +79,11 @@ public class OrdersController : ControllerBase
         return StatusCode((int)result.StatusCode, result);
     }
 
+    /// <summary>
+    /// Elimina una orden existente.
+    /// </summary>
+    /// <param name="orderId">Identificador de la orden a eliminar.</param>
+    /// <returns>Respuesta sin contenido si la eliminación fue exitosa.</returns>
     [HttpDelete("{orderId}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
