@@ -13,6 +13,6 @@ public class UpdateOrderRequestValidator : AbstractValidator<UpdateOrderRequest>
     public UpdateOrderRequestValidator()
     {
         RuleFor(x => x.Estado)
-            .IsInEnum().WithMessage("El estado proporcionado no es válido");
+            .IsInEnum().WithMessage("El estado proporcionado no es válido.");
     }
 }

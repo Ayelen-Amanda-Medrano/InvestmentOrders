@@ -56,7 +56,7 @@ public class OrderService : IOrderService
         await _orderRepository.AddAsync(newOrder);
         await _orderRepository.SaveChangesAsync();
 
-        return Result<CreateOrderResponse>.Ok(new CreateOrderResponse { OrderId = newOrder.Id }, HttpStatusCode.OK);
+        return Result<CreateOrderResponse>.Ok(new CreateOrderResponse { OrderId = newOrder.Id }, HttpStatusCode.Created);
     }
 
     /// <summary>
