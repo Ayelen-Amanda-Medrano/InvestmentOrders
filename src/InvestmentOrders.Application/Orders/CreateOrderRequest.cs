@@ -12,10 +12,10 @@ public class CreateOrderRequest
     public int CuentaId { get; set; }
 
     /// <summary>
-    /// Nombre del activo financiero asociado a la orden.
+    /// Identificador del activo financiero.
     /// </summary>
     [Required]
-    public string NombreActivo { get; set; }
+    public string Ticker { get; set; }
 
     /// <summary>
     /// Cantidad de unidades del activo financiero.

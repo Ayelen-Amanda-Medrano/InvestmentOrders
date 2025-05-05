@@ -38,15 +38,15 @@ public class OrderService : IOrderService
     /// <returns>A result containing the ID of the created order.</returns>
     public async Task<Result<CreateOrderResponse>> CreateOrderAsync(CreateOrderRequest request)
     {
-        var asset = await _assetRepository.GetAssetByNameAsync(request.NombreActivo);
+        var asset = await _assetRepository.GetAssetByTickerAsync(request.Ticker);
         if (asset == null)
-            return Result<CreateOrderResponse>.Fail($"El activo '{request.NombreActivo}' no existe.", HttpStatusCode.BadRequest);
+            return Result<CreateOrderResponse>.Fail($"El identificador '{request.Ticker}' del activo financiero no existe.", HttpStatusCode.BadRequest);
 
         if (asset.NeedsUnitPrice() && (request.PrecioUnitario is null || request.PrecioUnitario <= 0))
             return Result<CreateOrderResponse>
                 .Fail($"El precio unitario es obligatorio y debe ser mayor a 0 para el activo de tipo '{asset.TipoActivo.Descripcion}'.", HttpStatusCode.BadRequest);
 
-        var newOrder = Orden.CreateOrder(request.CuentaId, request.NombreActivo, request.Cantidad, request.Operacion);
+        var newOrder = Orden.CreateOrder(request.CuentaId, asset.Nombre, request.Cantidad, request.Operacion);
 
         newOrder.SetAsset(asset);
         newOrder.SetPrice(request.PrecioUnitario);

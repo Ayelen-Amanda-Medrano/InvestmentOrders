@@ -15,5 +15,5 @@ public interface IAssetRepository : IBaseRepository<Activo, int>
     /// </summary>
     /// <param name="name">The name of the financial asset.</param>
     /// <returns>The corresponding financial asset, or null if not found.</returns>
-    Task<Activo?> GetAssetByNameAsync(string name);
+    Task<Activo?> GetAssetByTickerAsync(string ticker);
 }

@@ -9,10 +9,10 @@ public class AssetRepository : BaseRepository<Activo, int>, IAssetRepository
     public AssetRepository(OrderDbContext dbContext)
         : base(dbContext) { }
 
-    public async Task<Activo?> GetAssetByNameAsync(string name)
+    public async Task<Activo?> GetAssetByTickerAsync(string ticker)
     {
         return await DbContext.Activos
             .Include(a => a.TipoActivo)
-            .FirstOrDefaultAsync(a => a.Nombre == name);
+            .FirstOrDefaultAsync(a => a.Ticker == ticker);
     }
 }

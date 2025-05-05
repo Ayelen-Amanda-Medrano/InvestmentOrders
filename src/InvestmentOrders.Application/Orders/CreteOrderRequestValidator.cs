@@ -13,9 +13,8 @@ public class CreteOrderRequestValidator : AbstractValidator<CreateOrderRequest>
     /// </summary>
     public CreteOrderRequestValidator()
     {
-        RuleFor(x => x.NombreActivo)
-            .NotEmpty().WithMessage("El nombre del activo es obligatorio.")
-            .MaximumLength(32).WithMessage("El nombre del activo no puede exceder los 32 caracteres.");
+        RuleFor(x => x.Ticker)
+            .NotEmpty().WithMessage("El identificador del activo financiero es obligatorio.");
 
         RuleFor(x => x.Cantidad)
             .GreaterThan(0).WithMessage("La cantidad debe ser mayor a 0.");
